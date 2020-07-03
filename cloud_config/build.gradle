@@ -1,0 +1,15 @@
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-config-server'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//    compile 'org.springframework.cloud:spring-cloud-bus' // 消息总线实现动态刷新
+//    compile 'org.springframework.cloud:spring-cloud-starter-bus-kafka' // 消息总线实现动态刷新
+//    compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka' // 消息总线实现动态刷新
+    compile 'org.springframework.boot:spring-boot-starter-actuator' // 健康监控
+//    compile 'org.springframework.boot:spring-boot-starter-aop'
+//    compile 'org.springframework.retry:spring-retry' // 异常重试
+}
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.hg.config.ConfigServerApplication'
+    }
+}
