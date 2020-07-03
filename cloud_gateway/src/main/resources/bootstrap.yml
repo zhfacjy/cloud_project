@@ -13,16 +13,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-zuul:
-  host:
-    connect-timeout-millis: 10000
-    socket-timeout-millis: 60000
-  routes:
-    user-service:
-      path: /userapi/**
-      servicdeId: user-service
-      sensitiveHeaders: #让转发前的请求头信息传给服务
-    test-service:
-      path: /testapi/**
-      servicdeId: test-service
-      sensitiveHeaders:
