@@ -3,4 +3,5 @@ include 'cloud_eureka'
 include 'cloud_config'
 include 'cloud_gateway'
 include 'common_utils'
+include 'cloud_zipkin'
 
