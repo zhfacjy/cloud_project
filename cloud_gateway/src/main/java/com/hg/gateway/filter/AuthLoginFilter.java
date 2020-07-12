@@ -8,6 +8,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import javax.annotation.Resource;
@@ -18,9 +19,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+@Component
 public class AuthLoginFilter extends ZuulFilter {
 
-    @Value("${auth.addJwt.path}")
+    @Value("#{'${auth.addJwt.path}'.split(',')}")
     private List<String> addJwtPath;
 
     @Resource
@@ -33,14 +35,17 @@ public class AuthLoginFilter extends ZuulFilter {
 
     @Override
     public int filterOrder() {
-        return 0;
+        return 1;
     }
 
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        if (addJwtPath.indexOf(request.getPathInfo()) > 0) return true;
+        String url = request.getRequestURI();
+        for (String add : addJwtPath) {
+            if (url.indexOf(add) > 0) return true;
+        }
         return false;
     }
 
@@ -53,7 +58,7 @@ public class AuthLoginFilter extends ZuulFilter {
             JSONObject object = JSON.parseObject(JSON.toJSONString(body));
             if (object.getInteger("code") == 200) {
                 HashMap<String, Object> jwtClaims = new HashMap<String, Object>() {{
-                    put("userId", object.getString("userId"));
+                    put("userId", object.getJSONObject("data").getString("userId"));
                 }};
                 Date expDate = DateTime.now().plusDays(1).toDate(); //过期时间 1 天
                 String token = jwtUtil.createJWT(expDate,jwtClaims);

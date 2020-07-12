@@ -22,7 +22,7 @@ public class AuthTokenFilter extends ZuulFilter {
     @Resource(name = "JwtUtil")
     private JwtUtil jwtUtil;
 
-    @Value("${auth.ignore.path}")
+    @Value("#{'${auth.ignore.path}'.split(',')}")
     private List<String> ignorePath;
 
     @Override
@@ -39,7 +39,10 @@ public class AuthTokenFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        if (ignorePath.indexOf(request.getPathInfo()) > 0) return false;
+        String url = request.getRequestURI();
+        for (String ignore : ignorePath) {
+            if (url.indexOf(ignore) > 0) return false;
+        }
         return true;
     }
 

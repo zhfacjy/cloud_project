@@ -4,4 +4,7 @@ include 'cloud_config'
 include 'cloud_gateway'
 include 'common_utils'
 include 'cloud_zipkin'
+include 'user_service'
+include 'lib_common'
+include 'test_service'
 
