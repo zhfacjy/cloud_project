@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_DECORATION_FILTER_ORDER;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+
 /**
  * 验证token，优先级为0
  */
@@ -27,12 +30,12 @@ public class AuthTokenFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "pre";
+        return PRE_TYPE;
     }
 
     @Override
     public int filterOrder() {
-        return 0;
+        return PRE_DECORATION_FILTER_ORDER - 1;
     }
 
     @Override

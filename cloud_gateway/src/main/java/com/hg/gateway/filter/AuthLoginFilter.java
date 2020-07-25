@@ -19,23 +19,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.SEND_RESPONSE_FILTER_ORDER;
+
 @Component
 public class AuthLoginFilter extends ZuulFilter {
 
     @Value("#{'${auth.addJwt.path}'.split(',')}")
     private List<String> addJwtPath;
 
-    @Resource
+    @Resource(name = "JwtUtil")
     private JwtUtil jwtUtil;
 
     @Override
     public String filterType() {
-        return "post";
+        return POST_TYPE;
     }
 
     @Override
     public int filterOrder() {
-        return 1;
+        return SEND_RESPONSE_FILTER_ORDER - 1;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class AuthLoginFilter extends ZuulFilter {
         try {
             InputStream stream = ctx.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
-            JSONObject object = JSON.parseObject(JSON.toJSONString(body));
+            JSONObject object = JSON.parseObject(body);
             if (object.getInteger("code") == 200) {
                 HashMap<String, Object> jwtClaims = new HashMap<String, Object>() {{
                     put("userId", object.getJSONObject("data").getString("userId"));

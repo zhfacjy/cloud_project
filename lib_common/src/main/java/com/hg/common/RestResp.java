@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class RestResp {
 
-    public static final Integer OK = 0;
+    public static final Integer OK = 200;
     public static final Integer ERROR = 520;
     public static final Integer NOT_FOUND = 404;
     public static final Integer PARAM_ERROR= 400;
